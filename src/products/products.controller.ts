@@ -83,4 +83,36 @@ export class ProductsController {
       });
     }
   }
+
+  @Get('/user')
+  @UseGuards(JwtAuthGuard)
+  @UsePipes(new ValidationPipe())
+  async getAllProductsByUseer(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Query() pagination: PaginationDto,
+  ) {
+    const user = req.user as any;
+    const userId = user.id;
+
+    try {
+      const result = await this.productsService.getAllProductsByUser(
+        userId,
+        pagination,
+      );
+
+      return res.status(HttpStatus.OK).json({
+        staus: 200,
+        message: 'ok',
+        result,
+      });
+    } catch (err) {
+      console.log(err);
+
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        status: 500,
+        message: 'internal server error',
+      });
+    }
+  }
 }

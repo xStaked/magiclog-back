@@ -21,4 +21,12 @@ export class ProductContainerService {
 
     return productContainer;
   }
+
+  async getProductContainer(id: number) {
+    const containers = await this.prismaService.productContainer.findMany({
+      where: { user: { id } },
+    });
+
+    return containers;
+  }
 }

@@ -29,11 +29,13 @@ export class ProductsService {
 
     if (!containerId) {
       console.log('creating product container');
+
       const productContainer = await this.productContainerService.create({
         name: '',
-        userId: id || 2,
+        userId: id,
       });
-      productContainerId = productContainer.userId;
+
+      productContainerId = productContainer.id;
       console.log('productContainerId', productContainerId);
     }
 
@@ -54,10 +56,27 @@ export class ProductsService {
     const { limit = 10, offset = 0 } = paginationDTO;
 
     const products = await this.prismaService.product.findMany({
-      where: { container: { userId } },
       skip: Number(offset),
       take: Number(limit),
     });
+
+    return products;
+  }
+
+  async getAllProductsByUser(userId: number, paginationDTO: PaginationDto) {
+    const { limit = 10, offset = 0 } = paginationDTO;
+    const products = await this.prismaService.product.findMany({
+      where: {
+        container: {
+          userId,
+        },
+      },
+      skip: Number(offset),
+      take: Number(limit),
+    });
+
+    console.log(userId);
+    console.log(products);
 
     return products;
   }
