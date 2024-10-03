@@ -9,6 +9,7 @@ import {
   Res,
   HttpStatus,
   Get,
+  Query,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -57,7 +58,7 @@ export class ProductsController {
   async getAllUserProducts(
     @Req() req: Request,
     @Res() res: Response,
-    @Body() pagination: PaginationDto,
+    @Query() pagination: PaginationDto,
   ) {
     const user = req.user as any;
     const userId = user.id;

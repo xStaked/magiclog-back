@@ -55,8 +55,8 @@ export class ProductsService {
 
     const products = await this.prismaService.product.findMany({
       where: { container: { userId } },
-      skip: offset,
-      take: limit,
+      skip: Number(offset),
+      take: Number(limit),
     });
 
     return products;
