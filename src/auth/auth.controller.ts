@@ -4,13 +4,10 @@ import {
   Body,
   Req,
   Res,
-  UseGuards,
   HttpStatus,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import { User } from './entities/user.entity';
 import { AuthService } from './auth.service';
 import { RegisterUsersDto } from './dto/register-user.dto';
 import { Request, Response } from 'express';

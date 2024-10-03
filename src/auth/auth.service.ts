@@ -5,7 +5,6 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from './entities/user.entity';
-import { PayloadToken } from './dto/token.dto';
 import { LoginDto } from './dto/login-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
@@ -34,14 +33,6 @@ export class AuthService {
     if (user) return user;
 
     return null;
-  }
-
-  generateJWT(user: User) {
-    const payload: PayloadToken = { role: user.role, sub: user.id };
-
-    return {
-      access_token: this.JwtService.sign(payload),
-    };
   }
 
   async login(user: LoginDto): Promise<any> {
@@ -88,7 +79,7 @@ export class AuthService {
     });
 
     return {
-      token: this.JwtService.sign({ user }),
+      token: this.JwtService.sign(user),
     };
   }
 }

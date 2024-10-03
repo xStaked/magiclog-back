@@ -13,52 +13,47 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
-  id        Int   @id @default(autoincrement())
-  email     String   @unique
-  password  String
-  username  String
-  role      Role     // Enum to manage roles in the backend
-  createdAt DateTime @default(now()) @map("created_at")
+  id         Int                @id @default(autoincrement())
+  email      String             @unique
+  password   String
+  username   String
+  role       Role // Enum to manage roles in the backend
+  createdAt  DateTime           @default(now()) @map("created_at")
   containers ProductContainer[]
   carts      Cart[]
 }
 
 model ProductContainer {
-  id        Int   @id @default(autoincrement())
-  name      String?  // Nullable text
-  createdAt DateTime @default(now()) @map("created_at")
+  id        Int       @id @default(autoincrement())
+  name      String? // Nullable text
+  createdAt DateTime  @default(now()) @map("created_at")
   userId    Int
-  user      User     @relation(fields: [userId], references: [id])
+  user      User      @relation(fields: [userId], references: [id])
   products  Product[]
-
-  Cart Cart[]
 }
 
 model Product {
-  id          Int   @id @default(autoincrement())
+  id          Int              @id @default(autoincrement())
   name        String
-  sku         String   @unique
+  sku         String           @unique
   quantity    Int
   price       Float
   containerId Int
   container   ProductContainer @relation(fields: [containerId], references: [id])
+  carts       Cart[]           @relation("ProductCarts")
 }
 
 model Cart {
-  id         Int   @id @default(autoincrement())
-  userId     Int
-  containerId Int
-  addedAt    DateTime @default(now()) @map("added_at")
-  user       User     @relation(fields: [userId], references: [id])
-  container  ProductContainer @relation(fields: [containerId], references: [id])
+  id       Int       @id @default(autoincrement())
+  userId   Int
+  addedAt  DateTime  @default(now()) @map("added_at")
+  user     User      @relation(fields: [userId], references: [id])
+  products Product[] @relation("ProductCarts")
 }
-
 
 enum Role {
   SELLER
   BUYER
   ADMIN
 }
-
