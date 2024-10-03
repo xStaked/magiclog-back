@@ -1,0 +1,64 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model User {
+  id        Int   @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  username  String
+  role      Role     // Enum to manage roles in the backend
+  createdAt DateTime @default(now()) @map("created_at")
+  containers ProductContainer[]
+  carts      Cart[]
+}
+
+model ProductContainer {
+  id        Int   @id @default(autoincrement())
+  name      String?  // Nullable text
+  createdAt DateTime @default(now()) @map("created_at")
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  products  Product[]
+
+  Cart Cart[]
+}
+
+model Product {
+  id          Int   @id @default(autoincrement())
+  name        String
+  sku         String   @unique
+  quantity    Int
+  price       Float
+  containerId Int
+  container   ProductContainer @relation(fields: [containerId], references: [id])
+}
+
+model Cart {
+  id         Int   @id @default(autoincrement())
+  userId     Int
+  containerId Int
+  addedAt    DateTime @default(now()) @map("added_at")
+  user       User     @relation(fields: [userId], references: [id])
+  container  ProductContainer @relation(fields: [containerId], references: [id])
+}
+
+
+enum Role {
+  SELLER
+  BUYER
+  ADMIN
+}
+
