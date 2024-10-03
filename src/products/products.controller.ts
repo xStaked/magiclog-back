@@ -8,11 +8,13 @@ import {
   ValidationPipe,
   Res,
   HttpStatus,
+  Get,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Request, Response } from 'express';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Controller('products')
 export class ProductsController {
@@ -45,6 +47,38 @@ export class ProductsController {
       return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
         status: 500,
         message: 'Internal server error',
+      });
+    }
+  }
+
+  @Get()
+  @UseGuards(JwtAuthGuard)
+  @UsePipes(new ValidationPipe())
+  async getAllUserProducts(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Body() pagination: PaginationDto,
+  ) {
+    const user = req.user as any;
+    const userId = user.id;
+
+    try {
+      const result = await this.productsService.getAllUserProducts(
+        userId,
+        pagination,
+      );
+
+      return res.status(HttpStatus.OK).json({
+        staus: 200,
+        message: 'ok',
+        result,
+      });
+    } catch (err) {
+      console.log(err);
+
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        status: 500,
+        message: 'internal server error',
       });
     }
   }

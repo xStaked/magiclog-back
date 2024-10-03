@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ProductContainerService } from 'src/product-container/product-container.service';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Injectable()
 export class ProductsService {
@@ -47,5 +48,17 @@ export class ProductsService {
     });
 
     return product;
+  }
+
+  async getAllUserProducts(userId: number, paginationDTO: PaginationDto) {
+    const { limit = 10, offset = 0 } = paginationDTO;
+
+    const products = await this.prismaService.product.findMany({
+      where: { container: { userId } },
+      skip: offset,
+      take: limit,
+    });
+
+    return products;
   }
 }
