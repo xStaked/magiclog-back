@@ -45,9 +45,10 @@ export class ProductsController {
     } catch (err) {
       console.log(err);
 
-      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-        status: 500,
-        message: 'Internal server error',
+      res.statusMessage = err.response.message;
+      return res.status(err.status).json({
+        status: err.response.statusCode,
+        message: err.response.message,
       });
     }
   }
@@ -76,10 +77,10 @@ export class ProductsController {
       });
     } catch (err) {
       console.log(err);
-
-      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-        status: 500,
-        message: 'internal server error',
+      res.statusMessage = err.response.message;
+      return res.status(err.status).json({
+        status: err.response.statusCode,
+        message: err.response.message,
       });
     }
   }
@@ -109,9 +110,10 @@ export class ProductsController {
     } catch (err) {
       console.log(err);
 
-      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-        status: 500,
-        message: 'internal server error',
+      res.statusMessage = err.response.message;
+      return res.status(err.status).json({
+        status: err.response.statusCode,
+        message: err.response.message,
       });
     }
   }

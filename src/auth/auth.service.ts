@@ -74,7 +74,7 @@ export class AuthService {
           userData.password,
           10,
         )),
-        role: 'ADMIN',
+        role: 'SELLER',
       },
     });
 

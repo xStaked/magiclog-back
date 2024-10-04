@@ -36,9 +36,10 @@ export class AuthController {
       });
     } catch (err) {
       console.log(err);
-      return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-        status: 'Error!',
-        message: 'Internal Server Error!',
+      response.statusMessage = err.response.message;
+      return response.status(err.status).json({
+        status: err.response.statusCode,
+        message: err.response.message,
       });
     }
   }
@@ -59,9 +60,10 @@ export class AuthController {
       });
     } catch (err) {
       console.log(err);
-      return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-        status: 'Error!',
-        message: 'Internal Server Error!',
+      response.statusMessage = err.response.message;
+      return response.status(err.status).json({
+        status: err.response.statusCode,
+        message: err.response.message,
       });
     }
   }
