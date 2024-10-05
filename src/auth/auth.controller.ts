@@ -15,13 +15,16 @@ import { RegisterUsersDto } from './dto/register-user.dto';
 import { Request, Response } from 'express';
 import { LoginDto } from './dto/login-user.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('auth')
+@ApiTags('Auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Get('/validate')
   @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Validate user token' })
   async validateSession(@Req() req: Request, @Res() response: Response) {
     try {
       const user = req.user as any;
@@ -46,6 +49,7 @@ export class AuthController {
 
   @Post('/login')
   @UsePipes(new ValidationPipe())
+  @ApiOperation({ summary: 'login user' })
   async login(
     @Req() req: Request,
     @Res() response: Response,
@@ -74,6 +78,7 @@ export class AuthController {
 
   @Post('/register')
   @UsePipes(new ValidationPipe())
+  @ApiOperation({ summary: 'Register user' })
   async register(
     @Req() request: Request,
     @Res() response: Response,

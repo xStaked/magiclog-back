@@ -3,8 +3,10 @@ import { ProductContainerService } from './product-container.service';
 import { CreateProductContainerDto } from './dto/create-product-container.dto';
 import { Request } from 'express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('product-container')
+@ApiTags('Product Container')
 export class ProductContainerController {
   constructor(
     private readonly productContainerService: ProductContainerService,

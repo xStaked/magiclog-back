@@ -12,12 +12,17 @@ import { UsersService } from './users.service';
 import { Request, Response } from 'express';
 import { Role } from '@prisma/client';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Roles } from 'src/common/decorators/roles.decorator';
 
 @Controller('users')
+@ApiTags('Users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get('/all')
+  @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Get all users' })
   async getAllUsers(@Req() req: Request, @Res() response: Response) {
     try {
       const result = await this.usersService.getAllusers();
@@ -38,6 +43,7 @@ export class UsersController {
 
   @Get('/by-role')
   @UseGuards(JwtAuthGuard)
+  @ApiOperation({ summary: 'Get all users by role' })
   async getUsersByRole(
     @Req() req: Request,
     @Res() response: Response,
@@ -63,6 +69,9 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
+  @Roles(Role.ADMIN)
+  @ApiOperation({ summary: 'Delete user by id' })
   async remove(
     @Req() req: Request,
     @Res() response: Response,

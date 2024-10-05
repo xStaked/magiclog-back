@@ -19,14 +19,17 @@ import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { Role } from 'src/auth/entities/role.enum';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @Controller('products')
+@ApiTags('Products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Post()
   @UseGuards(JwtAuthGuard)
   @UsePipes(new ValidationPipe())
+  @ApiOperation({ summary: 'Create product' })
   async create(
     @Req() req: Request,
     @Res() res: Response,
@@ -58,6 +61,7 @@ export class ProductsController {
 
   @Get()
   @UsePipes(new ValidationPipe())
+  @ApiOperation({ summary: 'Get all products' })
   async getAllUserProducts(
     @Req() req: Request,
     @Res() res: Response,
@@ -85,6 +89,7 @@ export class ProductsController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN)
   @UsePipes(new ValidationPipe())
+  @ApiOperation({ summary: 'Get all products with user role equal to SELLER' })
   async getAllUserProductsWithUserInfo(
     @Req() req: Request,
     @Res() res: Response,
@@ -112,6 +117,7 @@ export class ProductsController {
   @Get('/user')
   @UseGuards(JwtAuthGuard)
   @UsePipes(new ValidationPipe())
+  @ApiOperation({ summary: 'Get all products related to an userId' })
   async getAllProductsByUseer(
     @Req() req: Request,
     @Res() res: Response,
