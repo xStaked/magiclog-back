@@ -18,6 +18,7 @@ import { Request, Response } from 'express';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { Roles } from 'src/common/decorators/roles.decorator';
+import { Role } from 'src/auth/entities/role.enum';
 
 @Controller('products')
 export class ProductsController {
@@ -80,9 +81,9 @@ export class ProductsController {
     }
   }
 
-  @Get('/users')
+  @Get('/admin')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('admin')
+  @Roles(Role.ADMIN)
   @UsePipes(new ValidationPipe())
   async getAllUserProductsWithUserInfo(
     @Req() req: Request,

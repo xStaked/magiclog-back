@@ -40,11 +40,10 @@ export class AuthService {
 
   async login(user: LoginDto): Promise<any> {
     const { email, password } = user;
-
     const searchUser = await this.prismaService.user.findUnique({
       where: { email },
     });
-
+    console.log('search usa', searchUser);
     if (!searchUser) {
       throw new NotFoundException('user not found');
     }
@@ -57,7 +56,13 @@ export class AuthService {
     if (!validatePassword) throw new NotFoundException('Invalid password');
 
     return {
-      token: this.JwtService.sign({ user }),
+      token: this.JwtService.sign({
+        user: {
+          id: searchUser.id,
+          role: searchUser.role,
+          email: searchUser.email,
+        },
+      }),
     };
   }
 
