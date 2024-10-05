@@ -9,6 +9,7 @@ import { LoginDto } from './dto/login-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { RegisterUsersDto } from './dto/register-user.dto';
+import { Role } from './entities/role.enum';
 
 @Injectable()
 export class AuthService {
@@ -18,19 +19,21 @@ export class AuthService {
   ) {}
 
   async validateUser(username: string, password: string) {
-    const users: User[] = [
-      {
-        username: 'test',
-        password: '1234556',
-        role: 'admin',
-        id: 1,
-      },
-    ];
+    // const users: User[] = [
+    //   {
+    //     username: 'test',
+    //     password: '1234556',
+    //     role: Role.ADMIN,
+    //     id: 1,
+    //     email: 'email@email.com',
+    //     createdAt: '',
+    //   },
+    // ];
 
-    const user: User = users.find(
-      (item) => item.username === username && item.password === password,
-    );
-    if (user) return user;
+    // const user: User = users.find(
+    //   (item) => item.username === username && item.password === password,
+    // );
+    // if (user) return user;
 
     return null;
   }

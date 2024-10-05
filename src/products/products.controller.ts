@@ -16,6 +16,8 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Request, Response } from 'express';
 import { PaginationDto } from 'src/common/dto/pagination.dto';
+import { RolesGuard } from 'src/common/guards/roles.guard';
+import { Roles } from 'src/common/decorators/roles.decorator';
 
 @Controller('products')
 export class ProductsController {
@@ -54,21 +56,41 @@ export class ProductsController {
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard)
   @UsePipes(new ValidationPipe())
   async getAllUserProducts(
     @Req() req: Request,
     @Res() res: Response,
     @Query() pagination: PaginationDto,
   ) {
-    const user = req.user as any;
-    const userId = user.id;
-
     try {
-      const result = await this.productsService.getAllUserProducts(
-        userId,
-        pagination,
-      );
+      const result = await this.productsService.getAllProducts(pagination);
+
+      return res.status(HttpStatus.OK).json({
+        staus: 200,
+        message: 'ok',
+        result,
+      });
+    } catch (err) {
+      console.log(err);
+      res.statusMessage = err.response.message;
+      return res.status(err.status).json({
+        status: err.response.statusCode,
+        message: err.response.message,
+      });
+    }
+  }
+
+  @Get('/users')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin')
+  @UsePipes(new ValidationPipe())
+  async getAllUserProductsWithUserInfo(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Query() pagination: PaginationDto,
+  ) {
+    try {
+      const result = await this.productsService.getAllProducts(pagination);
 
       return res.status(HttpStatus.OK).json({
         staus: 200,

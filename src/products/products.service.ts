@@ -52,12 +52,37 @@ export class ProductsService {
     return product;
   }
 
-  async getAllUserProducts(userId: number, paginationDTO: PaginationDto) {
+  async getAllProducts(paginationDTO: PaginationDto) {
     const { limit = 10, offset = 0 } = paginationDTO;
 
     const products = await this.prismaService.product.findMany({
       skip: Number(offset),
       take: Number(limit),
+    });
+
+    return products;
+  }
+
+  async getAllProductsWhereUser(paginationDTO: PaginationDto) {
+    const { limit = 10, offset = 0 } = paginationDTO;
+
+    const products = await this.prismaService.product.findMany({
+      skip: Number(offset),
+      take: Number(limit),
+      include: {
+        container: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                email: true,
+                username: true,
+                role: true,
+              },
+            },
+          },
+        },
+      },
     });
 
     return products;
