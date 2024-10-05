@@ -63,10 +63,17 @@ export class ProductsService {
     return products;
   }
 
-  async getAllProductsWhereUser(paginationDTO: PaginationDto) {
+  async getAllProductsWithUserData(paginationDTO: PaginationDto) {
     const { limit = 10, offset = 0 } = paginationDTO;
 
     const products = await this.prismaService.product.findMany({
+      where: {
+        container: {
+          user: {
+            role: 'SELLER',
+          },
+        },
+      },
       skip: Number(offset),
       take: Number(limit),
       include: {

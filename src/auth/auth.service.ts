@@ -4,12 +4,10 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { User } from './entities/user.entity';
 import { LoginDto } from './dto/login-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
 import { RegisterUsersDto } from './dto/register-user.dto';
-import { Role } from './entities/role.enum';
 
 @Injectable()
 export class AuthService {
@@ -18,24 +16,19 @@ export class AuthService {
     private prismaService: PrismaService,
   ) {}
 
-  async validateUser(username: string, password: string) {
-    // const users: User[] = [
-    //   {
-    //     username: 'test',
-    //     password: '1234556',
-    //     role: Role.ADMIN,
-    //     id: 1,
-    //     email: 'email@email.com',
-    //     createdAt: '',
-    //   },
-    // ];
+  async validateSession(userId: number) {
+    const user = await this.prismaService.user.findUnique({
+      where: { id: userId },
+    });
 
-    // const user: User = users.find(
-    //   (item) => item.username === username && item.password === password,
-    // );
-    // if (user) return user;
+    if (!user) throw new NotFoundException('User does not exists');
 
-    return null;
+    return {
+      id: user.id,
+      email: user.email,
+      username: user.username,
+      role: user.role,
+    };
   }
 
   async login(user: LoginDto): Promise<any> {
@@ -87,7 +80,13 @@ export class AuthService {
     });
 
     return {
-      token: this.JwtService.sign(user),
+      token: this.JwtService.sign({
+        user: {
+          id: user.id,
+          role: user.role,
+          email: user.email,
+        },
+      }),
     };
   }
 }

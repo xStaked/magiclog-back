@@ -91,7 +91,8 @@ export class ProductsController {
     @Query() pagination: PaginationDto,
   ) {
     try {
-      const result = await this.productsService.getAllProducts(pagination);
+      const result =
+        await this.productsService.getAllProductsWithUserData(pagination);
 
       return res.status(HttpStatus.OK).json({
         staus: 200,
