@@ -48,6 +48,13 @@ export class AuthService {
 
     if (!validatePassword) throw new NotFoundException('Invalid password');
 
+    const returnUser = {
+      id: searchUser.id,
+      username: searchUser.username,
+      email: searchUser.email,
+      role: searchUser.role,
+    };
+
     return {
       token: this.JwtService.sign({
         user: {
@@ -56,6 +63,7 @@ export class AuthService {
           email: searchUser.email,
         },
       }),
+      user: returnUser,
     };
   }
 
@@ -79,6 +87,14 @@ export class AuthService {
       },
     });
 
+    console.log('usa', user);
+    const returnUser = {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      role: user.role,
+    };
+
     return {
       token: this.JwtService.sign({
         user: {
@@ -87,6 +103,7 @@ export class AuthService {
           email: user.email,
         },
       }),
+      user: returnUser,
     };
   }
 }

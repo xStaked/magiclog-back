@@ -55,16 +55,34 @@ export class ProductsService {
   async getAllProducts(paginationDTO: PaginationDto) {
     const { limit = 10, offset = 0 } = paginationDTO;
 
+    const totalProducts = await this.prismaService.product.count();
+
     const products = await this.prismaService.product.findMany({
       skip: Number(offset),
       take: Number(limit),
     });
 
-    return products;
+    const totalPages = Math.ceil(totalProducts / limit);
+
+    return {
+      products,
+      totalPages,
+      totalProducts,
+    };
   }
 
   async getAllProductsWithUserData(paginationDTO: PaginationDto) {
     const { limit = 10, offset = 0 } = paginationDTO;
+
+    const totalProducts = await this.prismaService.product.count({
+      where: {
+        container: {
+          user: {
+            role: 'SELLER',
+          },
+        },
+      },
+    });
 
     const products = await this.prismaService.product.findMany({
       where: {
@@ -92,11 +110,26 @@ export class ProductsService {
       },
     });
 
-    return products;
+    const totalPages = Math.ceil(totalProducts / limit);
+
+    return {
+      products,
+      totalPages,
+      totalProducts,
+    };
   }
 
   async getAllProductsByUser(userId: number, paginationDTO: PaginationDto) {
     const { limit = 10, offset = 0 } = paginationDTO;
+
+    const totalProducts = await this.prismaService.product.count({
+      where: {
+        container: {
+          userId,
+        },
+      },
+    });
+
     const products = await this.prismaService.product.findMany({
       where: {
         container: {
@@ -107,9 +140,12 @@ export class ProductsService {
       take: Number(limit),
     });
 
-    console.log(userId);
-    console.log(products);
+    const totalPages = Math.ceil(totalProducts / limit);
 
-    return products;
+    return {
+      products,
+      totalPages,
+      totalProducts,
+    };
   }
 }

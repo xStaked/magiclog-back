@@ -52,12 +52,15 @@ export class AuthController {
     @Body() userData: LoginDto,
   ) {
     try {
-      const token = await this.authService.login(userData);
-      console.log(token);
+      const data = await this.authService.login(userData);
+      console.log(data);
       return response.status(HttpStatus.OK).json({
         status: 'Ok!',
         message: 'Success',
-        token,
+        result: {
+          token: data.token,
+          user: data.user,
+        },
       });
     } catch (err) {
       console.log(err);
@@ -77,11 +80,14 @@ export class AuthController {
     @Body() registerDto: RegisterUsersDto,
   ): Promise<any> {
     try {
-      const result = await this.authService.register(registerDto);
+      const data = await this.authService.register(registerDto);
       return response.status(HttpStatus.CREATED).json({
         status: 'Ok!',
         message: 'Successfully register user!',
-        result: result,
+        result: {
+          token: data.token,
+          user: data.user,
+        },
       });
     } catch (err) {
       console.log(err);
