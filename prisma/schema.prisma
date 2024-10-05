@@ -21,7 +21,6 @@ model User {
   role       Role // Enum to manage roles in the backend
   createdAt  DateTime           @default(now()) @map("created_at")
   containers ProductContainer[]
-  carts      Cart[]
 }
 
 model ProductContainer {
@@ -41,15 +40,6 @@ model Product {
   price       Float
   containerId Int
   container   ProductContainer @relation(fields: [containerId], references: [id])
-  carts       Cart[]           @relation("ProductCarts")
-}
-
-model Cart {
-  id       Int       @id @default(autoincrement())
-  userId   Int
-  addedAt  DateTime  @default(now()) @map("added_at")
-  user     User      @relation(fields: [userId], references: [id])
-  products Product[] @relation("ProductCarts")
 }
 
 enum Role {
