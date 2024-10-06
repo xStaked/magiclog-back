@@ -171,6 +171,13 @@ export class ProductsService {
       },
     });
 
-    return products;
+    const totalProducts = products.length;
+    const totalPages = Math.ceil(totalProducts / 10);
+
+    return {
+      products,
+      totalPages,
+      totalProducts,
+    };
   }
 }

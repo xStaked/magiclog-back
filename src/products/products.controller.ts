@@ -149,7 +149,6 @@ export class ProductsController {
   }
 
   @Get('/match')
-  @UseGuards(JwtAuthGuard)
   @UsePipes(new ValidationPipe())
   @ApiOperation({ summary: 'Get products that match with query' })
   async getMatchProduct(
