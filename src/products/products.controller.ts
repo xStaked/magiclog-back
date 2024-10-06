@@ -147,4 +147,32 @@ export class ProductsController {
       });
     }
   }
+
+  @Get('/match')
+  @UseGuards(JwtAuthGuard)
+  @UsePipes(new ValidationPipe())
+  @ApiOperation({ summary: 'Get products that match with query' })
+  async getMatchProduct(
+    @Req() req: Request,
+    @Res() res: Response,
+    @Query() query: { name: string },
+  ) {
+    try {
+      const result = await this.productsService.getMatchProducts(query);
+
+      return res.status(HttpStatus.OK).json({
+        staus: 200,
+        message: 'ok',
+        result,
+      });
+    } catch (err) {
+      console.log(err);
+
+      res.statusMessage = err.response.message;
+      return res.status(err.status).json({
+        status: err.response.statusCode,
+        message: err.response.message,
+      });
+    }
+  }
 }

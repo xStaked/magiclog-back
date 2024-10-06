@@ -148,4 +148,29 @@ export class ProductsService {
       totalProducts,
     };
   }
+
+  async getMatchProducts(query: { name: string }) {
+    const { name } = query;
+
+    const products = await this.prismaService.product.findMany({
+      where: {
+        OR: [
+          {
+            name: {
+              contains: name,
+              mode: 'insensitive',
+            },
+          },
+          {
+            sku: {
+              contains: name,
+              mode: 'insensitive',
+            },
+          },
+        ],
+      },
+    });
+
+    return products;
+  }
 }
