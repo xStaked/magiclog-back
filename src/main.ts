@@ -15,13 +15,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
-  const cors = {
-    origin: [
-      'http://localhost:3001',
-      'https://magiclog-front-enmvt00ur-sromero21s-projects.vercel.app',
-    ],
-  };
-  app.enableCors(cors);
+  app.enableCors();
   await app.listen(process.env.PORT || 3000);
 }
 bootstrap();
